@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  JenkinSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow SSH and HTTP"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+        - IpProtocol: tcp
+          FromPort: 8080
+          ToPort: 8080
+          CidrIp: "0.0.0.0/0"
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0f403e3180720dd7e"  # Specify your desired AMI ID
+      InstanceType: "t2.micro"  # Adjust the instance type as needed
+      KeyName: "masterKey"  # Replace with your EC2 KeyPair name
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          sudo yum update -y
+          sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+          sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+          sudo yum upgrade
+          sudo dnf install java-17-amazon-corretto -y
+          sudo yum install jenkins -y
+          sudo systemctl enable jenkins
+          sudo yum install git -y
+          sudo cat /var/lib/jenkins/secrets/initialAdminPassword
+          sudo systemctl start jenkins
+          sudo systemctl status jenkins
+          
+  
