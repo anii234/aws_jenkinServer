@@ -26,7 +26,7 @@ cd aws_jenkinServer
 
 8. Go to the EC2 dashboard and find the public IP address or public DNS of the Jenkins server instance.
 
-9. Access Jenkins by opening a web browser and navigating to `http://<Jenkins_Public_IP>:3000`.
+9. Access Jenkins by opening a web browser and navigating to `http://<Jenkins_Public_IP>:8080`.
 
 ## Cleanup
 To avoid incurring unnecessary charges, don't forget to delete the CloudFormation stack once you're done using Jenkins.
